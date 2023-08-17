@@ -429,25 +429,6 @@ RSViolinPlot >> computeDefualtXTicks [
 	self horizontalTick ticks ifNil: [ self xTickLabels: (1 to: self numberOfViolins) ].
 ]
 
-{ #category : #initialization }
-RSViolinPlot >> computeState [
-	self computeXValues.
-	self computeYValues.
-]
-
-{ #category : #rendering }
-RSViolinPlot >> computeXValues [
-	xValues := (1 to: self numberOfViolins).
-]
-
-{ #category : #initialization }
-RSViolinPlot >> computeYValues [
-	| yMax yMin |
-	yMax := (bandPlotShapes collect: [ :violinShape | violinShape maxDataValue ]) max.
-	yMin := (bandPlotShapes collect: [ :violinShape | violinShape minDataValue ]) min.
-	yValues := {yMin. yMax.}.
-]
-
 { #category : #accessing }
 RSViolinPlot >> createViolinShapeFor: anObject dataset: dataset [
 	self assert: dataset notEmpty description: 'dataset can not be empty'.
@@ -493,7 +474,6 @@ RSViolinPlot >> data: dataset [
 	dataset isBlock ifTrue: [ dataBlock := dataset ].
 	collectionOfDatasets := self extractDatasetsFrom: dataset.
 	self createViolinShapesWithDataSet: collectionOfDatasets.
-	self computeState
 ]
 
 { #category : #'accessing - computed' }
@@ -530,7 +510,6 @@ RSViolinPlot >> initialize [
 { #category : #rendering }
 RSViolinPlot >> kernelBandwidth: aNumber [
 	bandPlotShapes do: [ :violin | violin kernelBandwidth: aNumber ].
-	self computeState.
 ]
 
 { #category : #styling }
