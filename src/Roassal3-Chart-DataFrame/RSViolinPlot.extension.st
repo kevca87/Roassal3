@@ -17,7 +17,12 @@ RSViolinPlot >> categoryBy: aColumnName [
 			newLabels add: category ] ].
 	self models: newModels.
 	self data: dataBlock.
-	self xTickLabels: newLabels
+]
+
+{ #category : #'*Roassal3-Chart-DataFrame' }
+RSViolinPlot >> dataColumn: aColumnName [
+	
+	self data: [ :df | (df column: aColumnName) asArray ].
 ]
 
 { #category : #'*Roassal3-Chart-DataFrame' }
@@ -138,11 +143,4 @@ RSViolinPlot >> hue: aColumnName [
 		newViolinPlot data: dataBlock.
 		clusteredChart := clusteredChart + newViolinPlot ].
 	^ clusteredChart
-]
-
-{ #category : #'*Roassal3-Chart-DataFrame' }
-RSViolinPlot >> y: aColumnName [
-	
-	self data: [ :df | (df column: aColumnName) asArray ].
-	self computeState.
 ]
