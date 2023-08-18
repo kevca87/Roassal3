@@ -195,7 +195,14 @@ RSViolinPlotShape >> outlierSize: aDimensionInPixels [
 
 { #category : #rendering }
 RSViolinPlotShape >> renderIn: canvas [
+	| popupText |
 	self addChildrenToComposite.
+	popupText := 'Upper whisker: ',boxPlotShape upperLimit asString,String cr,
+		'Q3: ', boxPlotShape quartiles third asString,String cr,
+		'Q2: ', boxPlotShape median asString,' (Median)',String cr,
+		'Q1: ', boxPlotShape quartiles first asString,String cr,
+		'Lower whisker: ',boxPlotShape lowerLimit asString.
+	self @ (RSPopup text: popupText).
 	canvas add: self.
 	^ canvas.
 ]
