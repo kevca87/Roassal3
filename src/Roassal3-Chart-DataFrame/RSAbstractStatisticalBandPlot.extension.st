@@ -17,6 +17,7 @@ RSAbstractStatisticalBandPlot >> categoryBy: aColumnName [
 			newLabels add: category ] ].
 	self models: newModels.
 	self data: dataBlock.
+	self bandsTicksLabels: newLabels.
 ]
 
 { #category : #'*Roassal3-Chart-DataFrame' }

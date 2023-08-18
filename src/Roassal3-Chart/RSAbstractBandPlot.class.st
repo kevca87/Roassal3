@@ -24,7 +24,8 @@ Class {
 		'offset',
 		'horizontal',
 		'bandPlotShapes',
-		'positions'
+		'positions',
+		'bandsTicksLabels'
 	],
 	#category : #'Roassal3-Chart-Core'
 }
@@ -61,6 +62,19 @@ RSAbstractBandPlot >> bandScale: aNSScale [
 { #category : #rendering }
 RSAbstractBandPlot >> bandsOffset: aNumberInRange [
 	offset := aNumberInRange
+]
+
+{ #category : #private }
+RSAbstractBandPlot >> bandsTicksLabels [
+	^ bandsTicksLabels ifNil: [ 
+		horizontal 
+			ifTrue: [ ^ yValues ]
+			ifFalse: [ ^ xValues ] ].
+]
+
+{ #category : #private }
+RSAbstractBandPlot >> bandsTicksLabels: collectionOfLabels [
+	bandsTicksLabels := collectionOfLabels.
 ]
 
 { #category : #rendering }
@@ -114,12 +128,12 @@ RSAbstractBandPlot >> computeTicks [
 		ifFalse: [
 			horizontalTick := self horizontalTick.
 			horizontalTick ifNotNil: [ 
-				horizontalTick isTicksDataNil ifTrue: [ self xTicks: xValues labels: xValues ] ].
+				horizontalTick isTicksDataNil ifTrue: [ self xTicks: xValues labels: self bandsTicksLabels ] ].
 		 ]
 		ifTrue: [ 
 			verticalTick := self verticalTick.
 			verticalTick ifNotNil: [
-				verticalTick isTicksDataNil ifTrue: [ self yTicks: yValues labels: yValues ] ].
+				verticalTick isTicksDataNil ifTrue: [ self yTicks: yValues labels: self bandsTicksLabels ] ].
 		 ].
 ]
 
