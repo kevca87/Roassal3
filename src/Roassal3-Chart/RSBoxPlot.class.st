@@ -101,17 +101,9 @@ c open
 "
 Class {
 	#name : #RSBoxPlot,
-	#superclass : #RSAbstractBandPlot,
+	#superclass : #RSAbstractStatisticalBandPlot,
 	#category : #'Roassal3-Chart-Core'
 }
-
-{ #category : #'instance creation' }
-RSBoxPlot class >> data: aCollection [
-	| boxPlot |
-	boxPlot := self new.
-	boxPlot data: aCollection.
-	^ boxPlot
-]
 
 { #category : #examples }
 RSBoxPlot class >> example01BoxPlot [
@@ -594,6 +586,17 @@ RSBoxPlot class >> exampleBoxPlotStyleWhiskerFormat [
 	^ boxPlot open.
 ]
 
+{ #category : #examples }
+RSBoxPlot class >> exampleModels [
+	| violinPlot accessor |
+	accessor := [ :cls| cls methods collect: [ :met | met linesOfCode ] ].
+	violinPlot := self new.
+	violinPlot models: (String withAllSubclasses 
+		reject: [:cls | (accessor rsValue: cls) isEmpty ]).
+	violinPlot data: accessor.
+	^ violinPlot open
+]
+
 { #category : #'examples - style' }
 RSBoxPlot class >> exampleSetYTicksLabels [
 	| p1 y1 |
@@ -609,7 +612,7 @@ RSBoxPlot class >> exampleSetYTicksLabels [
 
 { #category : #accessing }
 RSBoxPlot >> boxShapes [
-	^ bandPlotShapes.
+	^ self bandPlotShapes.
 ]
 
 { #category : #rendering }
@@ -620,15 +623,6 @@ RSBoxPlot >> boxShapes: collectionOfRSBoxPlotShape [
 { #category : #rendering }
 RSBoxPlot >> boxes [
 	^ RSGroup new addAll: (bandPlotShapes collect: [ :boxShape | boxShape box ]); yourself.
-]
-
-{ #category : #public }
-RSBoxPlot >> buildChart [
-	chart add: self.
-	chart
-		extent: 360 @ 300;
-		padding: 15.
-	^ chart
 ]
 
 { #category : #testing }
@@ -644,22 +638,6 @@ RSBoxPlot >> color: aColor [
 { #category : #accessing }
 RSBoxPlot >> colors: collectionOfColors [
 	bandPlotShapes with: collectionOfColors do: [ :bandShape :color | bandShape  color: color ].
-]
-
-{ #category : #accessing }
-RSBoxPlot >> computeBoxGraphicsCenters [
-	| lastBoxCenter |
-	lastBoxCenter := 1.
-	self boxShapes: (bandPlotShapes collect: [ :boxGraph | 
-		boxGraph graphCenter: lastBoxCenter "+groupOffset".
-		"lastBoxCenter := lastBoxCenter + self defaultOffset".
-		boxGraph.
-	]).
-]
-
-{ #category : #rendering }
-RSBoxPlot >> computeDefualtXTicks [
-	self horizontalTick ticks ifNil: [ self xTickLabels: (1 to: self numberOfBoxes) ].
 ]
 
 { #category : #accessing }
@@ -682,21 +660,17 @@ RSBoxPlot >> confidencePercentage: aPercentage [
 	bandPlotShapes do: [ :boxShape | boxShape confidencePercentage: aPercentage ].
 ]
 
+{ #category : #private }
+RSBoxPlot >> createBandShapeFor: anObject dataset: dataset [
+	self assert: dataset notEmpty description: 'dataset can not be empty'.
+	^ (RSBoxPlotShape data: dataset)
+		model: anObject;
+		yourself.
+]
+
 { #category : #accessing }
 RSBoxPlot >> createdShapes [
 	^ { self boxShapes. }
-]
-
-{ #category : #rendering }
-RSBoxPlot >> data: aCollection [
-	| collectionOfDatasets |
-	
-	"if is not a collection of collections. transform in a collection of collections"
-	collectionOfDatasets := aCollection first isCollection
-		                        ifFalse: [ { aCollection } ]
-		                        ifTrue: [ aCollection ].
-	self boxShapes: (collectionOfDatasets collect: [ :dataSet | RSBoxPlotShape data: dataSet.]).
-	self computeBoxGraphicsCenters.
 ]
 
 { #category : #initialization }

@@ -43,6 +43,16 @@ RSAbstractBandPlot >> assignXAndYScales: aChart [
 	aChart xScale: xScale.
 ]
 
+{ #category : #'accessing - defaults' }
+RSAbstractBandPlot >> bandPlotShapes [
+	^ RSGroup withAll: bandPlotShapes.
+]
+
+{ #category : #'accessing - defaults' }
+RSAbstractBandPlot >> bandPlotShapes: collectionOfRSAbstractBandPlotShape [
+	bandPlotShapes := collectionOfRSAbstractBandPlotShape.
+]
+
 { #category : #rendering }
 RSAbstractBandPlot >> bandScale: aNSScale [
 	bandScale := aNSScale.
