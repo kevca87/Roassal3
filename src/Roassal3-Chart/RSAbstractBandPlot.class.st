@@ -35,11 +35,11 @@ Class {
 { #category : #decoration }
 RSAbstractBandPlot >> assignXAndYLabels [
 	horizontal ifTrue: [ 
-		self xlabel: (self xlabel ifNil: [self dataLabel]).
-		self ylabel: (self ylabel ifNil: [self bandLabel]). ]
+		self xlabel: (self xlabel = nil ifTrue: [self dataLabel]).
+		self ylabel: (self ylabel = nil ifTrue: [self bandLabel]). ]
 	ifFalse: [ 
-		self xlabel: (self xlabel ifNil: [self bandLabel]).
-		self ylabel: (self ylabel ifNil: [self dataLabel]). ].
+		self xlabel: (self xlabel = nil ifTrue: [self bandLabel]).
+		self ylabel: (self ylabel = nil ifTrue: [self dataLabel]). ].
 ]
 
 { #category : #rendering }
