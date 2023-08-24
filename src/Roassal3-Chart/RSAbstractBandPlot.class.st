@@ -25,10 +25,22 @@ Class {
 		'horizontal',
 		'bandPlotShapes',
 		'positions',
-		'bandsTicksLabels'
+		'bandsTicksLabels',
+		'bandLabel',
+		'dataLabel'
 	],
 	#category : #'Roassal3-Chart-Core'
 }
+
+{ #category : #decoration }
+RSAbstractBandPlot >> assignXAndYLabels [
+	horizontal ifTrue: [ 
+		self xlabel: self dataLabel.
+		self ylabel: self bandLabel. ]
+	ifFalse: [ 
+		self xlabel: self bandLabel.
+		self ylabel: self dataLabel. ].
+]
 
 { #category : #rendering }
 RSAbstractBandPlot >> assignXAndYScales: aChart [
@@ -42,6 +54,16 @@ RSAbstractBandPlot >> assignXAndYScales: aChart [
 		dataScale := self xScale. ].
 	aChart yScale: yScale.
 	aChart xScale: xScale.
+]
+
+{ #category : #decoration }
+RSAbstractBandPlot >> bandLabel [
+	^ bandLabel.
+]
+
+{ #category : #decoration }
+RSAbstractBandPlot >> bandLabel: aString [
+	bandLabel := aString.
 ]
 
 { #category : #'accessing - defaults' }
@@ -93,6 +115,7 @@ RSAbstractBandPlot >> beforeRenderingIn: aChart [
 	super beforeRenderingIn: aChart.
 	self computeTicks.
 	self assignXAndYScales: aChart.
+	self assignXAndYLabels.
 ]
 
 { #category : #rendering }
@@ -156,6 +179,16 @@ RSAbstractBandPlot >> computeXAndYValues [
 { #category : #accessing }
 RSAbstractBandPlot >> createdShapes [
 	^ self subclassResponsibility
+]
+
+{ #category : #decoration }
+RSAbstractBandPlot >> dataLabel [
+	^ dataLabel.
+]
+
+{ #category : #decoration }
+RSAbstractBandPlot >> dataLabel: aString [
+	dataLabel := aString.
 ]
 
 { #category : #accessing }
