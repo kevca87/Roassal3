@@ -7,7 +7,10 @@ Class {
 		'clustersMargin',
 		'bandsMargin',
 		'horizontal',
-		'positions'
+		'positions',
+		'bandLabel',
+		'dataLabel',
+		'bandsTicksLabels'
 	],
 	#category : #'Roassal3-Chart-Core'
 }
@@ -25,6 +28,26 @@ RSClusterChart >> add: aPlot [
 	^ aPlot
 ]
 
+{ #category : #decoration }
+RSClusterChart >> assignXAndYLabels [
+	horizontal ifTrue: [ 
+		self xlabel: (self xlabel ifNil: [self dataLabel]).
+		self ylabel: (self ylabel ifNil: [self bandLabel]). ]
+	ifFalse: [ 
+		self xlabel: (self xlabel ifNil: [self bandLabel]).
+		self ylabel: (self ylabel ifNil: [self dataLabel]). ].
+]
+
+{ #category : #decoration }
+RSClusterChart >> bandLabel [
+	^ bandLabel.
+]
+
+{ #category : #decoration }
+RSClusterChart >> bandLabel: aString [
+	bandLabel := aString.
+]
+
 { #category : #accessing }
 RSClusterChart >> bandsMargin [
 	^ bandsMargin
@@ -34,6 +57,16 @@ RSClusterChart >> bandsMargin [
 RSClusterChart >> bandsMargin: floatBetween0And1 [
 	bandsMargin := floatBetween0And1.
 	self computePlotsBands
+]
+
+{ #category : #decoration }
+RSClusterChart >> bandsTicksLabels [
+	^ bandsTicksLabels ifNil: [ positions ].
+]
+
+{ #category : #decoration }
+RSClusterChart >> bandsTicksLabels: collectionOfLabels [
+	bandsTicksLabels := collectionOfLabels.
 ]
 
 { #category : #adding }
@@ -109,13 +142,23 @@ RSClusterChart >> computeTicks [
 		ifFalse: [
 			horizontalTick := self horizontalTick.
 			horizontalTick ifNotNil: [ 
-				horizontalTick isTicksDataNil ifTrue: [ self xTicks: positions labels: positions ] ].
+				horizontalTick isTicksDataNil ifTrue: [ self xTicks: positions labels: self bandsTicksLabels ] ].
 		 ]
 		ifTrue: [ 
 			verticalTick := self verticalTick.
 			verticalTick ifNotNil: [
-				verticalTick isTicksDataNil ifTrue: [ self yTicks: positions labels: positions ] ].
+				verticalTick isTicksDataNil ifTrue: [ self yTicks: positions labels: self bandsTicksLabels ] ].
 		 ].
+]
+
+{ #category : #decoration }
+RSClusterChart >> dataLabel [
+	^ dataLabel.
+]
+
+{ #category : #decoration }
+RSClusterChart >> dataLabel: aString [
+	dataLabel := aString.
 ]
 
 { #category : #defaults }
@@ -159,5 +202,6 @@ RSClusterChart >> renderIn: aCanvas [
 		ifFalse: [ self extent: (self extent x * (1+(self plots size * 0.1)))@(self extent y). ].	
 	self computePlotsBands.
 	self computeTicks.
+	self assignXAndYLabels.
 	^ super renderIn: aCanvas.
 ]

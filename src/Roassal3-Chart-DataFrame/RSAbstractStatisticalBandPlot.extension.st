@@ -65,5 +65,8 @@ RSAbstractStatisticalBandPlot >> hue: aColumnName [
 		newViolinPlot models: newModels.
 		newViolinPlot data: dataBlock.
 		clusteredChart := clusteredChart + newViolinPlot ].
+	clusteredChart dataLabel: self dataLabel.
+	clusteredChart bandLabel: self bandLabel.
+	clusteredChart bandsTicksLabels: self bandsTicksLabels.
 	^ clusteredChart
 ]
